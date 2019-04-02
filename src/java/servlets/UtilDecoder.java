@@ -12,7 +12,7 @@ import javax.websocket.EndpointConfig;
  *
  * @author paulo
  */
-public class ChatMessageDecoder implements Decoder.Text<ChatMessage> {
+public class UtilDecoder implements Decoder.Text<PalavraMagica> {
 
     @Override
     public void init(final EndpointConfig config) {
@@ -23,14 +23,13 @@ public class ChatMessageDecoder implements Decoder.Text<ChatMessage> {
     }
 
     @Override
-    public ChatMessage decode(final String textMessage) throws DecodeException {
-        ChatMessage chatMessage = new ChatMessage();
+    public PalavraMagica decode(final String textMessage) throws DecodeException {
+        PalavraMagica palavra = new PalavraMagica();
         JsonObject obj = Json.createReader(new StringReader(textMessage))
                 .readObject();
-        chatMessage.setMessage(obj.getString("message"));
-        chatMessage.setSender(obj.getString("sender"));
-        chatMessage.setReceived(new Date());
-        return chatMessage;
+        palavra.setPalavraMagica(obj.getString("palavraMagica"));
+        palavra.setLetra(obj.getString("letra"));
+        return palavra;
     }
 
     @Override

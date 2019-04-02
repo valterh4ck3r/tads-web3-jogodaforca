@@ -1,60 +1,74 @@
 var wsocket;
-var serviceLocation = "ws://" + document.location.host + document.location.pathname + "chat/";
-var $nickName;
-var $message;
-var $chatWindow;
+var serviceLocation = "ws://" + document.location.host + document.location.pathname + "jogodaforca/";
 var room = '';
+var palavraMagica = '';
+var tentativas = 5;
+var letrasAcertos = [];
 
 function onMessageReceived(evt) {
-    var msg = JSON.parse(evt.data); // native API
-    var $messageLine = $('<tr><td class="received">' + msg.received
-            + '</td><td class="user label label-info">' + msg.sender
-            + '</td><td class="message badge">' + msg.message
-            + '</td></tr>');
-    $chatWindow.append($messageLine);
+    var objeto = JSON.parse(evt.data);    
+    mountPalavraMagica(objeto);
 }
-function sendMessage() {
-    var msg = '{"message":"' + $message.val() + '", "sender":"'
-            + $nickName.val() + '", "received":""}';
-    wsocket.send(msg);
-    $message.val('').focus();
+function sendMessage(letra) {
+    var formData = new FormData();
+    formData.append("letra", letra);
+    formData.append("palavraMagica", this.palavraMagica);
+    
+    var object = {};
+    formData.forEach((value, key) => {object[key] = value});
+    var json = JSON.stringify(object);
+
+    wsocket.send(json);
 }
 
 function connectToChatserver() {
-    room = $('#chatroom option:selected').val();
+    room = new Date().getTime().toString();
     wsocket = new WebSocket(serviceLocation + room);
     wsocket.onmessage = onMessageReceived;
+    
 }
 
 function leaveRoom() {
     wsocket.close();
-    $chatWindow.empty();
-    $('.chat-wrapper').hide();
-    $('.chat-signin').show();
-    $nickName.focus();
+}
+
+function mountPalavraMagica(objeto){
+    $('#palavraMagicaEscondida').html(objeto.palavraMagica)
+    $('#palavraMagica').html('')
+    
+    this.palavraMagica = objeto.palavraMagica;
+    
+    for(var index=0 ;index<this.palavraMagica.length; index++){
+        if(objeto.letra === this.palavraMagica[index]){
+            $('#palavraMagica').append(objeto.letra +" ")
+        }
+        $('#palavraMagica').append("_ ")
+    }
+    
 }
 
 $(document).ready(function () {
-    $nickName = $('#nickname');
-    $message = $('#message');
-    $chatWindow = $('#response');
-    $('.chat-wrapper').hide();
-    $nickName.focus();
-
-    $('#enterRoom').click(function (evt) {
+    connectToChatserver();
+    
+    $('#tentativas').html(tentativas);
+            
+    $('#sugerirLetra').click(function (evt) {
         evt.preventDefault();
-        connectToChatserver();
-        $('.chat-wrapper h2').text('Chat # ' + $nickName.val() + "@" + room);
-        $('.chat-signin').hide();
-        $('.chat-wrapper').show();
-        $message.focus();
-    });
-    $('#do-chat').submit(function (evt) {
-        evt.preventDefault();
-        sendMessage();
-    });
+        
+        tentativas--;
+        
+        if(tentativas >= 1){                    
+            var letra = $('#letra').val();
+            sendMessage(letra);
+            $('#letras-usadas').append(letra.toUpperCase() + " ")            
+        } else {
+            $('#sugerirLetra').addClass('disabled')
+            $('#sugerirLetra').attr('disabled' , 'disabled')
+            alert('Suas tentativas acabaram \n\nA palavra mágica é : ' + $('#palavraMagicaEscondida').html())
+        }
+        
+        $('#tentativas').html(tentativas);
 
-    $('#leave-room').click(function () {
-        leaveRoom();
+        $('#letra').val('');
     });
 });

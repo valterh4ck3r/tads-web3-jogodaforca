@@ -9,7 +9,7 @@ import javax.websocket.EndpointConfig;
  *
  * @author paulo
  */
-public class ChatMessageEncoder implements Encoder.Text<ChatMessage> {
+public class UtilEncoder implements Encoder.Text<PalavraMagica> {
 
     @Override
     public void init(final EndpointConfig config) {
@@ -20,11 +20,11 @@ public class ChatMessageEncoder implements Encoder.Text<ChatMessage> {
     }
 
     @Override
-    public String encode(final ChatMessage chatMessage) throws EncodeException {
+    public String encode(final PalavraMagica palavra) throws EncodeException {
         return Json.createObjectBuilder()
-                .add("message", chatMessage.getMessage())
-                .add("sender", chatMessage.getSender())
-                .add("received", chatMessage.getReceived().toString()).build()
+                .add("palavraMagica", palavra.getPalavraMagica())
+                .add("letra", palavra.getLetra() == null ? "" : palavra.getLetra())
+                .build()
                 .toString();
     }
 }

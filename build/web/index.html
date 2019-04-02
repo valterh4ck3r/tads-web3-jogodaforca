@@ -11,8 +11,32 @@
         <link href="./resource/css/index.css" rel="stylesheet">        
         <link href="./resource/css/bootstrap-responsive.css" rel="stylesheet">
     </head>
-
+    
+    
     <body>
+       
+        <div class="container chat-signin">
+            <form class="form-signin" id="form-letra">
+                <h2 class="form-signin-heading">Jogo da Força</h2>
+                <label for="nickname">Digite uma Letra</label>
+                <input type="text" class="input-block-level" placeholder="Letra" id="letra" maxlength="1">
+                <button class="btn btn-block btn-success" id="sugerirLetra">Sugerir Letra</button>
+            </form>
+            <h1 class="text-center" id="palavraMagica"></h1>
+            <br/>
+            <br/>
+            <h4 class="text-center">Letras Usadas</h4>
+            <h4 class="text-center" id="letras-usadas" style="color: red;"></h4>
+            <br/>
+            <br/>
+            <h4 class="text-center">Tentativas Disponíveis</h4>
+            <h4 class="text-center" id="tentativas" style="color: green;"></h4>
+            
+            <p id="palavraMagicaEscondida" class="hidden"></p>
+        </div>
+    </body>
+
+<!--    <body>
         <div class="container chat-signin">
             <form class="form-signin">
                 <h2 class="form-signin-heading">Jogo da Força</h2>
@@ -45,5 +69,5 @@
                 </fieldset>
             </form>
         </div>
-    </body>
+    </body>-->
 </html>

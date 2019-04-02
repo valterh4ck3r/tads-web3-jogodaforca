@@ -9,8 +9,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Properties;
 import java.util.Random;
 
 /**
@@ -19,10 +22,19 @@ import java.util.Random;
  */
 public class FileUtil {
       
-    public static String getPalavraMagica() throws IOException{
-        File file = new File("C:\\words.txt"); 
-  
-        BufferedReader br = new BufferedReader(new FileReader(file)); 
+    public String getPalavraMagica() throws IOException{  
+        File file;
+        
+        String os = System.getProperty("os.name");
+
+        if(os.toLowerCase().contains("windows")){
+           file = new File("C:\\wordlist_pt_br.txt"); 
+        } else {
+           file = new File("/home/wordlist_pt_br.txt");  
+        }
+                
+        
+        BufferedReader br = new BufferedReader(new FileReader(file.getAbsoluteFile())); 
         
         String stream; 
         List<String> palavrasMagicas = new ArrayList<>();

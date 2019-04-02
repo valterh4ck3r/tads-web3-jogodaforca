@@ -19,8 +19,7 @@ public class WebSocket {
 
     @OnOpen
     public void open(final Session session, @PathParam("room") final String room) throws IOException, EncodeException {
-        log.log(Level.INFO, "session opened and bound to room: {0}", room);
-        PalavraMagica palavraMagica = new PalavraMagica(FileUtil.getPalavraMagica());
+        PalavraMagica palavraMagica = new PalavraMagica(new FileUtil().getPalavraMagica());
         session.getUserProperties().put("room", room);
         session.getBasicRemote().sendObject(palavraMagica);
     }
